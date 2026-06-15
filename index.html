@@ -3,24 +3,25 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>경사각에 따른 물질 이동과 에너지 전달</title>
+    <title>에너지 전달 시뮬레이션</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <main class="app">
       <header class="hero">
-        <p class="eyebrow">Interactive Science Simulation</p>
-        <h1>경사각에 따른 물질 이동과 에너지 전달</h1>
-        <p>
-          
-        </p>
+        <h1>에너지 전달 시뮬레이션</h1>
+        <div class="model-switch" role="group" aria-label="시각화 모델 선택">
+          <button class="mode-button active" data-mode="physics" type="button">
+            물리 모델
+          </button>
+          <button class="mode-button" data-mode="earth" type="button">
+            지구과학 모델
+          </button>
+        </div>
       </header>
 
       <section class="layout">
-        <aside class="panel control-panel" aria-label="조작 패널">
-          <h2></h2>
-
-          
+        <aside class="panel control-panel" aria-label="시뮬레이션 조작">
           <div class="slider-group">
             <div class="slider-label">
               <label for="angleSlider">경사각</label>
@@ -49,28 +50,38 @@
             <button id="resetButton" class="secondary" type="button">초기화</button>
           </div>
 
-          <div class="mini-note">
-            <span></span>
-            경사각이 커질수록 중력의 경사 방향 성분이 커지고, 마찰이 커질수록
-            이동 속도와 전달 에너지가 감소합니다.
+          <div class="run-counter" aria-label="누적 실험 횟수">
+            <span>누적 실험</span>
+            <strong><span id="runCount">0</span>회</strong>
           </div>
         </aside>
 
-        <section class="panel simulation-panel" aria-label="시뮬레이션 영역">
-          <div class="panel-heading">
-            <h2>시뮬레이션 영역</h2>
-            <p id="stateText">대기 중</p>
-          </div>
+        <section class="panel simulation-panel" aria-label="시뮬레이션">
+          <span id="stateText" class="visually-hidden" aria-live="polite">대기 중</span>
           <div class="canvas-shell">
             <canvas id="simulationCanvas" width="900" height="520">
               이 브라우저는 canvas를 지원하지 않습니다.
             </canvas>
+            <div class="earth-process" id="earthProcess" aria-label="섭입 과정">
+              <div class="process-step" data-step="plate">
+                <i></i>
+                <span>해양판 섭입</span>
+              </div>
+              <div class="process-line"></div>
+              <div class="process-step" data-step="quake">
+                <i></i>
+                <span>지진 발생</span>
+              </div>
+              <div class="process-line"></div>
+              <div class="process-step" data-step="magma">
+                <i></i>
+                <span>마그마 상승</span>
+              </div>
+            </div>
           </div>
         </section>
 
-        <aside class="panel result-panel" aria-label="결과 패널">
-          <h2>실시간 결과</h2>
-
+        <aside class="panel result-panel" aria-label="측정 결과">
           <div class="metric-grid">
             <article class="metric">
               <span>현재 경사각</span>
@@ -89,11 +100,48 @@
               <strong><span id="resultEnergy">0.00</span></strong>
             </article>
           </div>
-
-          <div class="interpretation" id="interpretationText">
-            시작 버튼을 누르면 물체가 경사면을 따라 이동합니다.
-          </div>
         </aside>
+
+        <section class="panel analysis-panel" aria-labelledby="analysisTitle">
+          <div class="analysis-heading">
+            <div>
+              <p>LIVE DATA LAB</p>
+              <h2 id="analysisTitle">데이터 분석 패널</h2>
+            </div>
+            <div class="legend">
+              <span><i class="legend-dot measured"></i>측정값</span>
+              <span><i class="legend-dot current"></i>현재 결과</span>
+              <span><i class="legend-line"></i>추세</span>
+            </div>
+          </div>
+
+          <div class="chart-grid">
+            <article class="chart-item">
+              <h3>경사각과 이동 속도</h3>
+              <canvas
+                id="speedChart"
+                width="560"
+                height="330"
+                aria-label="경사각에 따른 이동 속도 그래프"
+              ></canvas>
+            </article>
+            <article class="chart-item">
+              <h3>경사각과 에너지 전달 위치</h3>
+              <canvas
+                id="depthChart"
+                width="560"
+                height="330"
+                aria-label="경사각에 따른 에너지 전달 깊이 그래프"
+              ></canvas>
+            </article>
+          </div>
+        </section>
+
+        <div class="mini-note">
+          <span></span>
+          경사각이 커질수록 중력의 경사 방향 성분이 커지고, 마찰이 커질수록 이동
+          속도와 전달 에너지가 감소합니다.
+        </div>
       </section>
     </main>
 
